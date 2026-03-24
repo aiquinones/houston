@@ -4,6 +4,7 @@ import type {
   HoustonNode,
   HoustonEdge,
   Step,
+  StepSummary,
 } from '../../shared/types.js';
 
 const SYSTEM_WIDTH = 520;
@@ -42,22 +43,36 @@ export const toGraphData = (arch: ArchitectureData): GraphData => {
       });
       innerY += FLOW_HEIGHT;
 
-      // Steps
+      // Steps — collapse depth >= 2 into grouped nodes
       let prevStepId: string | undefined;
       const flatSteps = flattenSteps(flow.steps);
+      const COLLAPSE_DEPTH = 2;
 
       for (const { step, depth } of flatSteps) {
+        // Skip steps that are collapsed into a parent group
+        if (depth >= COLLAPSE_DEPTH) continue;
+
+        const isGroupParent = depth === COLLAPSE_DEPTH - 1 && step.children.length > 0;
+        const childSummaries: StepSummary[] = isGroupParent
+          ? collectChildSummaries(step.children)
+          : [];
+
         flowNodes.push({
           id: step.id,
-          type: 'step',
+          type: isGroupParent ? 'stepGroup' : 'step',
           position: { x: PADDING + STEP_INDENT * depth + STEP_INDENT, y: innerY },
           data: {
             label: step.label,
             description: step.description,
             fileRef: step.fileRef,
-            nodeType: 'step',
+            nodeType: isGroupParent ? 'stepGroup' : 'step',
             systemId: system.id,
             flowId: flow.id,
+            depth,
+            ...(isGroupParent && {
+              childCount: childSummaries.length,
+              children: childSummaries,
+            }),
           },
           parentId: system.id,
           extent: 'parent',
@@ -134,6 +149,22 @@ export const toGraphData = (arch: ArchitectureData): GraphData => {
   }
 
   return { nodes, edges, frontmatter: arch.frontmatter };
+};
+
+// Recursively collect child step summaries for grouped nodes
+const collectChildSummaries = (steps: Step[]): StepSummary[] => {
+  const result: StepSummary[] = [];
+  for (const step of steps) {
+    result.push({
+      label: step.label,
+      description: step.description,
+      fileRef: step.fileRef,
+    });
+    if (step.children.length > 0) {
+      result.push(...collectChildSummaries(step.children));
+    }
+  }
+  return result;
 };
 
 // Flatten nested steps with depth tracking

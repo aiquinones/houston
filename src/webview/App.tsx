@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -9,15 +9,18 @@ import {
   type Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { SystemNode, FlowNode, StepNode } from './graph/nodes/index.js';
+import { SystemNode, FlowNode, StepNode, StepGroupNode } from './graph/nodes/index.js';
+import { DetailPanel } from './graph/DetailPanel.js';
 import { useExtensionMessages } from './hooks/useExtensionMessages.js';
 import { colors } from './theme/colors.js';
+import type { StepSummary } from '../shared/types.js';
 
 // marker:start NodeTypes
 const nodeTypes = {
   system: SystemNode,
   flow: FlowNode,
   step: StepNode,
+  stepGroup: StepGroupNode,
 };
 // marker:end NodeTypes
 
@@ -25,7 +28,20 @@ const nodeTypes = {
 export const App = () => {
   const { graphData, error, openFile } = useExtensionMessages();
 
-  // Inject openFile handler into step nodes
+  const [detailPanel, setDetailPanel] = useState<{
+    label: string;
+    children: StepSummary[];
+  } | null>(null);
+
+  const openDetail = useCallback((label: string, children: StepSummary[]) => {
+    setDetailPanel({ label, children });
+  }, []);
+
+  const closeDetail = useCallback(() => {
+    setDetailPanel(null);
+  }, []);
+
+  // Inject handlers into step/stepGroup nodes
   const nodes = useMemo<Node[]>(() => {
     if (!graphData) return [];
     return graphData.nodes.map((n) => ({
@@ -33,9 +49,10 @@ export const App = () => {
       data: {
         ...n.data,
         onOpenFile: openFile,
+        onOpenDetail: openDetail,
       },
     }));
-  }, [graphData, openFile]);
+  }, [graphData, openFile, openDetail]);
 
   const edges = useMemo<Edge[]>(() => {
     if (!graphData) return [];
@@ -182,6 +199,25 @@ export const App = () => {
             borderRadius: 6,
           }}
         />
+        <style>{`
+          .react-flow__controls-button {
+            background: ${colors.bgSurface} !important;
+            border: none !important;
+            border-bottom: 1px solid ${colors.border} !important;
+            fill: ${colors.textSecondary} !important;
+            color: ${colors.textSecondary} !important;
+          }
+          .react-flow__controls-button:hover {
+            background: ${colors.bgHover} !important;
+            fill: ${colors.textPrimary} !important;
+          }
+          .react-flow__controls-button:last-child {
+            border-bottom: none !important;
+          }
+          .react-flow__controls-button svg {
+            fill: inherit !important;
+          }
+        `}</style>
         <MiniMap
           nodeColor={(n) => {
             if (n.type === 'system') return colors.borderSystem;
@@ -196,6 +232,14 @@ export const App = () => {
           }}
         />
       </ReactFlow>
+      {detailPanel && (
+        <DetailPanel
+          label={detailPanel.label}
+          children={detailPanel.children}
+          onClose={closeDetail}
+          onOpenFile={openFile}
+        />
+      )}
     </div>
   );
 };
