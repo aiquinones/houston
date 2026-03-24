@@ -53,7 +53,13 @@ export type ArchitectureData = {
 
 // ── React Flow graph data ──
 
-export type HoustonNodeType = 'system' | 'flow' | 'step';
+export type HoustonNodeType = 'system' | 'flow' | 'step' | 'stepGroup';
+
+export type StepSummary = {
+  label: string;
+  description?: string;
+  fileRef?: FileReference;
+};
 
 export type HoustonNodeData = {
   label: string;
@@ -62,6 +68,9 @@ export type HoustonNodeData = {
   nodeType: HoustonNodeType;
   systemId?: string;
   flowId?: string;
+  depth?: number;
+  childCount?: number;
+  children?: StepSummary[];
 };
 
 export type HoustonNode = {
