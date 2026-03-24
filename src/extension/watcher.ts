@@ -51,13 +51,14 @@ export const createWatcher = (
       }
     };
 
-    watcher.onDidChange(handleChange);
-    watcher.onDidCreate(handleChange);
-    watcher.onDidDelete(() => {
-      onError(`${pattern} was deleted`);
-    });
-
-    disposables.push(watcher);
+    disposables.push(
+      watcher,
+      watcher.onDidChange(handleChange),
+      watcher.onDidCreate(handleChange),
+      watcher.onDidDelete(() => {
+        onError(`${pattern} was deleted`);
+      })
+    );
   }
 
   return disposables;

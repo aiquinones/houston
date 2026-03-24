@@ -17,10 +17,6 @@ export const activate = (context: vscode.ExtensionContext): void => {
       sendGraphData();
     });
 
-    panel.onDidDispose(() => {
-      panel = undefined;
-    });
-
     // Watch for architecture.md changes
     const watchers = createWatcher(
       context,
@@ -31,7 +27,11 @@ export const activate = (context: vscode.ExtensionContext): void => {
         if (panel) postMessage(panel, { type: 'error', message });
       }
     );
-    watchers.forEach((w) => context.subscriptions.push(w));
+
+    panel.onDidDispose(() => {
+      panel = undefined;
+      watchers.forEach((w) => w.dispose());
+    });
   });
 
   const refreshCommand = vscode.commands.registerCommand('houston.refresh', () => {

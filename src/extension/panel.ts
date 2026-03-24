@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { randomBytes } from 'crypto';
 import type { ExtensionToWebviewMessage, WebviewToExtensionMessage, FileReference } from '../shared/types.js';
 
 export const createHoustonPanel = (
@@ -47,6 +48,12 @@ export const postMessage = (
 const openFileReference = async (fileRef: FileReference): Promise<void> => {
   const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri;
   if (!workspaceRoot) return;
+
+  const normalized = fileRef.path.replace(/\\/g, '/');
+  if (normalized.includes('..') || normalized.startsWith('/')) {
+    vscode.window.showWarningMessage(`Houston: Blocked suspicious path: ${fileRef.path}`);
+    return;
+  }
 
   const fileUri = vscode.Uri.joinPath(workspaceRoot, fileRef.path);
 
@@ -106,11 +113,4 @@ const getWebviewHtml = (
 </html>`;
 };
 
-const getNonce = (): string => {
-  let text = '';
-  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
-};
+const getNonce = (): string => randomBytes(16).toString('hex');
