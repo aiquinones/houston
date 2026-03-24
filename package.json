@@ -19,7 +19,8 @@
     "workspaceContains:architecture.md",
     "workspaceContains:.houston/architecture.md"
   ],
-  "main": "./dist/extension/index.js",
+  "type": "module",
+  "main": "./dist/extension/index.cjs",
   "contributes": {
     "commands": [
       {
@@ -40,14 +41,28 @@
     ]
   },
   "scripts": {
-    "dev": "tsup --watch",
-    "build": "tsup",
+    "dev": "node scripts/build.mjs --watch",
+    "build": "node scripts/build.mjs",
     "lint": "eslint src/",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "package": "pnpm build && npx @vscode/vsce package --no-dependencies"
+  },
+  "dependencies": {
+    "remark-frontmatter": "^5.0.0",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.0",
+    "yaml": "^2.4.0"
   },
   "devDependencies": {
+    "@types/mdast": "^4.0.4",
+    "@types/node": "^25.5.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
     "@types/vscode": "^1.85.0",
-    "tsup": "^8.0.0",
+    "@xyflow/react": "^12.0.0",
+    "esbuild": "^0.21.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
     "typescript": "^5.4.0"
   }
 }
