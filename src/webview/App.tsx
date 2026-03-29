@@ -1,6 +1,8 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import {
   ReactFlow,
+  ReactFlowProvider,
+  useReactFlow,
   Background,
   Controls,
   MiniMap,
@@ -23,6 +25,19 @@ const nodeTypes = {
   stepGroup: StepGroupNode,
 };
 // marker:end NodeTypes
+
+const FitViewOnData = ({ nodeCount }: { nodeCount: number }) => {
+  const { fitView } = useReactFlow();
+
+  useEffect(() => {
+    if (nodeCount === 0) return;
+    // Small delay to let React Flow measure node dimensions
+    const timer = setTimeout(() => fitView({ padding: 0.2 }), 50);
+    return () => clearTimeout(timer);
+  }, [nodeCount, fitView]);
+
+  return null;
+};
 
 // marker:start App
 export const App = () => {
@@ -167,71 +182,74 @@ export const App = () => {
           </span>
         </div>
       )}
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeTypes}
-        onNodeDoubleClick={onNodeDoubleClick}
-        fitView
-        fitViewOptions={{ padding: 0.2 }}
-        minZoom={0.1}
-        maxZoom={2}
-        panOnScroll
-        panOnScrollSpeed={0.5}
-        zoomOnScroll={false}
-        zoomOnPinch
-        proOptions={{ hideAttribution: true }}
-        defaultEdgeOptions={{
-          style: { stroke: colors.edgeDefault, strokeWidth: 1.5 },
-        }}
-      >
-        <Background
-          variant={BackgroundVariant.Dots}
-          color={colors.gridDot}
-          gap={20}
-          size={1}
-          style={{ background: colors.bg }}
-        />
-        <Controls
-          style={{
-            background: colors.bgSurface,
-            border: `1px solid ${colors.border}`,
-            borderRadius: 6,
+      <ReactFlowProvider>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeTypes}
+          onNodeDoubleClick={onNodeDoubleClick}
+          fitView
+          fitViewOptions={{ padding: 0.2 }}
+          minZoom={0.1}
+          maxZoom={2}
+          panOnScroll
+          panOnScrollSpeed={0.5}
+          zoomOnScroll={false}
+          zoomOnPinch
+          proOptions={{ hideAttribution: true }}
+          defaultEdgeOptions={{
+            style: { stroke: colors.edgeDefault, strokeWidth: 1.5 },
           }}
-        />
-        <style>{`
-          .react-flow__controls-button {
-            background: ${colors.bgSurface} !important;
-            border: none !important;
-            border-bottom: 1px solid ${colors.border} !important;
-            fill: ${colors.textSecondary} !important;
-            color: ${colors.textSecondary} !important;
-          }
-          .react-flow__controls-button:hover {
-            background: ${colors.bgHover} !important;
-            fill: ${colors.textPrimary} !important;
-          }
-          .react-flow__controls-button:last-child {
-            border-bottom: none !important;
-          }
-          .react-flow__controls-button svg {
-            fill: inherit !important;
-          }
-        `}</style>
-        <MiniMap
-          nodeColor={(n) => {
-            if (n.type === 'system') return colors.borderSystem;
-            if (n.type === 'flow') return colors.accent;
-            return colors.bgNode;
-          }}
-          maskColor="rgba(10, 14, 23, 0.8)"
-          style={{
-            background: colors.bgSurface,
-            border: `1px solid ${colors.border}`,
-            borderRadius: 6,
-          }}
-        />
-      </ReactFlow>
+        >
+          <FitViewOnData nodeCount={nodes.length} />
+          <Background
+            variant={BackgroundVariant.Dots}
+            color={colors.gridDot}
+            gap={20}
+            size={1}
+            style={{ background: colors.bg }}
+          />
+          <Controls
+            style={{
+              background: colors.bgSurface,
+              border: `1px solid ${colors.border}`,
+              borderRadius: 6,
+            }}
+          />
+          <style>{`
+            .react-flow__controls-button {
+              background: ${colors.bgSurface} !important;
+              border: none !important;
+              border-bottom: 1px solid ${colors.border} !important;
+              fill: ${colors.textSecondary} !important;
+              color: ${colors.textSecondary} !important;
+            }
+            .react-flow__controls-button:hover {
+              background: ${colors.bgHover} !important;
+              fill: ${colors.textPrimary} !important;
+            }
+            .react-flow__controls-button:last-child {
+              border-bottom: none !important;
+            }
+            .react-flow__controls-button svg {
+              fill: inherit !important;
+            }
+          `}</style>
+          <MiniMap
+            nodeColor={(n) => {
+              if (n.type === 'system') return colors.borderSystem;
+              if (n.type === 'flow') return colors.accent;
+              return colors.bgNode;
+            }}
+            maskColor="rgba(10, 14, 23, 0.8)"
+            style={{
+              background: colors.bgSurface,
+              border: `1px solid ${colors.border}`,
+              borderRadius: 6,
+            }}
+          />
+        </ReactFlow>
+      </ReactFlowProvider>
       {detailPanel && (
         <DetailPanel
           label={detailPanel.label}
