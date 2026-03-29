@@ -103,7 +103,8 @@ export type GraphData = {
 
 export type ExtensionToWebviewMessage =
   | { type: 'update'; data: GraphData }
-  | { type: 'error'; message: string };
+  | { type: 'error'; message: string }
+  | { type: 'themeChanged'; kind: number };
 
 export type WebviewToExtensionMessage =
   | { type: 'openFile'; fileRef: FileReference }

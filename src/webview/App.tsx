@@ -14,7 +14,7 @@ import '@xyflow/react/dist/style.css';
 import { SystemNode, FlowNode, StepNode, StepGroupNode } from './graph/nodes/index.js';
 import { DetailPanel } from './graph/DetailPanel.js';
 import { useExtensionMessages } from './hooks/useExtensionMessages.js';
-import { colors } from './theme/colors.js';
+import { useTheme } from './theme/ThemeContext.js';
 import type { StepSummary } from '../shared/types.js';
 
 // marker:start NodeTypes
@@ -42,6 +42,7 @@ const FitViewOnData = ({ nodeCount }: { nodeCount: number }) => {
 
 // marker:start App
 export const App = () => {
+  const theme = useTheme();
   const { graphData, error, openFile } = useExtensionMessages();
 
   const [detailPanel, setDetailPanel] = useState<{
@@ -103,7 +104,7 @@ export const App = () => {
             width: 48,
             height: 48,
             borderRadius: '50%',
-            border: `2px solid ${colors.border}`,
+            border: `2px solid ${theme.border}`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -112,7 +113,7 @@ export const App = () => {
         >
           !
         </div>
-        <div style={{ color: colors.textSecondary, fontSize: 14, maxWidth: 400, textAlign: 'center' }}>
+        <div style={{ color: theme.textSecondary, fontSize: 14, maxWidth: 400, textAlign: 'center' }}>
           {error}
         </div>
       </div>
@@ -137,7 +138,7 @@ export const App = () => {
             width: 12,
             height: 12,
             borderRadius: '50%',
-            background: colors.accent,
+            background: theme.accent,
             animation: 'pulse 1.5s ease-in-out infinite',
           }}
         />
@@ -147,7 +148,7 @@ export const App = () => {
             50% { opacity: 1; transform: scale(1.2); }
           }
         `}</style>
-        <div style={{ color: colors.textMuted, fontSize: 12 }}>
+        <div style={{ color: theme.textMuted, fontSize: 12 }}>
           HOUSTON — AWAITING SIGNAL
         </div>
       </div>
@@ -156,6 +157,36 @@ export const App = () => {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
+      <button
+        onClick={theme.toggleTheme}
+        style={{
+          position: 'absolute',
+          top: 12,
+          right: 16,
+          zIndex: 10,
+          background: theme.bgSurface,
+          border: `1px solid ${theme.border}`,
+          borderRadius: 6,
+          padding: '4px 10px',
+          cursor: 'pointer',
+          color: theme.textSecondary,
+          fontFamily: 'monospace',
+          fontSize: 13,
+          lineHeight: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          transition: 'border-color 0.15s',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = theme.borderActive;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = theme.border;
+        }}
+        title={`Switch to ${theme.mode === 'dark' ? 'light' : 'dark'} mode`}
+      >
+        {theme.mode === 'dark' ? '\u2600' : '\u263E'}
+      </button>
       {graphData.frontmatter.name && (
         <div
           style={{
@@ -174,11 +205,11 @@ export const App = () => {
               width: 8,
               height: 8,
               borderRadius: '50%',
-              background: colors.success,
-              boxShadow: `0 0 6px ${colors.success}40`,
+              background: theme.success,
+              boxShadow: `0 0 6px ${theme.success}40`,
             }}
           />
-          <span style={{ color: colors.textSecondary, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <span style={{ color: theme.textSecondary, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             {graphData.frontmatter.name}
           </span>
         </div>
@@ -197,35 +228,35 @@ export const App = () => {
           zoomOnPinch
           proOptions={{ hideAttribution: true }}
           defaultEdgeOptions={{
-            style: { stroke: colors.edgeDefault, strokeWidth: 1.5 },
+            style: { stroke: theme.edgeDefault, strokeWidth: 1.5 },
           }}
         >
           <FitViewOnData nodeCount={nodes.length} />
           <Background
             variant={BackgroundVariant.Dots}
-            color={colors.gridDot}
+            color={theme.gridDot}
             gap={20}
             size={1}
-            style={{ background: colors.bg }}
+            style={{ background: theme.bg }}
           />
           <Controls
             style={{
-              background: colors.bgSurface,
-              border: `1px solid ${colors.border}`,
+              background: theme.bgSurface,
+              border: `1px solid ${theme.border}`,
               borderRadius: 6,
             }}
           />
           <style>{`
             .react-flow__controls-button {
-              background: ${colors.bgSurface} !important;
+              background: ${theme.bgSurface} !important;
               border: none !important;
-              border-bottom: 1px solid ${colors.border} !important;
-              fill: ${colors.textSecondary} !important;
-              color: ${colors.textSecondary} !important;
+              border-bottom: 1px solid ${theme.border} !important;
+              fill: ${theme.textSecondary} !important;
+              color: ${theme.textSecondary} !important;
             }
             .react-flow__controls-button:hover {
-              background: ${colors.bgHover} !important;
-              fill: ${colors.textPrimary} !important;
+              background: ${theme.bgHover} !important;
+              fill: ${theme.textPrimary} !important;
             }
             .react-flow__controls-button:last-child {
               border-bottom: none !important;
@@ -236,14 +267,14 @@ export const App = () => {
           `}</style>
           <MiniMap
             nodeColor={(n) => {
-              if (n.type === 'system') return colors.borderSystem;
-              if (n.type === 'flow') return colors.accent;
-              return colors.bgNode;
+              if (n.type === 'system') return theme.borderSystem;
+              if (n.type === 'flow') return theme.accent;
+              return theme.bgNode;
             }}
-            maskColor="rgba(10, 14, 23, 0.8)"
+            maskColor={theme.minimapMask}
             style={{
-              background: colors.bgSurface,
-              border: `1px solid ${colors.border}`,
+              background: theme.bgSurface,
+              border: `1px solid ${theme.border}`,
               borderRadius: 6,
             }}
           />

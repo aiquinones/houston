@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { HoustonNodeData } from '../../../shared/types.js';
-import { colors } from '../../theme/colors.js';
+import { useTheme } from '../../theme/ThemeContext.js';
 
 type StepNodeProps = NodeProps & {
   data: HoustonNodeData & {
@@ -11,6 +11,7 @@ type StepNodeProps = NodeProps & {
 
 // marker:start StepNode
 export const StepNode = ({ data }: StepNodeProps) => {
+  const theme = useTheme();
   const nodeData = data as unknown as HoustonNodeData & {
     onOpenFile?: (fileRef: HoustonNodeData['fileRef']) => void;
   };
@@ -28,19 +29,19 @@ export const StepNode = ({ data }: StepNodeProps) => {
       onDoubleClick={handleDoubleClick}
       style={{
         padding: '8px 14px',
-        background: colors.bgNode,
-        border: `1px solid ${colors.border}`,
+        background: theme.bgNode,
+        border: `1px solid ${theme.border}`,
         borderRadius: 6,
         cursor: hasFile ? 'pointer' : 'default',
         minWidth: 160,
         transition: 'border-color 0.15s, box-shadow 0.15s',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = colors.borderActive;
-        e.currentTarget.style.boxShadow = `0 0 8px ${colors.accentGlow}`;
+        e.currentTarget.style.borderColor = theme.borderActive;
+        e.currentTarget.style.boxShadow = `0 0 8px ${theme.accentGlow}`;
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = colors.border;
+        e.currentTarget.style.borderColor = theme.border;
         e.currentTarget.style.boxShadow = 'none';
       }}
       title={nodeData.description ?? ''}
@@ -48,21 +49,21 @@ export const StepNode = ({ data }: StepNodeProps) => {
       <div
         style={{
           fontSize: 12,
-          color: colors.textPrimary,
+          color: theme.textPrimary,
           fontFamily: 'monospace',
           whiteSpace: 'nowrap',
         }}
       >
         {nodeData.label}
         {nodeData.description && (
-          <span style={{ color: colors.textMuted }}> → {nodeData.description}</span>
+          <span style={{ color: theme.textMuted }}> → {nodeData.description}</span>
         )}
       </div>
       <Handle
         type="target"
         position={Position.Top}
         style={{
-          background: colors.edgeDefault,
+          background: theme.edgeDefault,
           border: 'none',
           width: 6,
           height: 6,
@@ -72,7 +73,7 @@ export const StepNode = ({ data }: StepNodeProps) => {
         type="source"
         position={Position.Bottom}
         style={{
-          background: colors.edgeDefault,
+          background: theme.edgeDefault,
           border: 'none',
           width: 6,
           height: 6,
