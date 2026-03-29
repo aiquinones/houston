@@ -34,7 +34,8 @@ const FitViewOnData = ({ nodeCount }: { nodeCount: number }) => {
     // Small delay to let React Flow measure node dimensions
     const timer = setTimeout(() => fitView({ padding: 0.2 }), 50);
     return () => clearTimeout(timer);
-  }, [nodeCount, fitView]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nodeCount]);
 
   return null;
 };
@@ -188,8 +189,6 @@ export const App = () => {
           edges={edges}
           nodeTypes={nodeTypes}
           onNodeDoubleClick={onNodeDoubleClick}
-          fitView
-          fitViewOptions={{ padding: 0.2 }}
           minZoom={0.1}
           maxZoom={2}
           panOnScroll
