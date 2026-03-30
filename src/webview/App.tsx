@@ -86,6 +86,11 @@ export const App = () => {
     [openFile]
   );
 
+  const defaultEdgeOptions = useMemo(
+    () => ({ style: { stroke: theme.edgeDefault, strokeWidth: 1.5 } }),
+    [theme.edgeDefault]
+  );
+
   if (error) {
     return (
       <div
@@ -227,9 +232,7 @@ export const App = () => {
           zoomOnScroll={false}
           zoomOnPinch
           proOptions={{ hideAttribution: true }}
-          defaultEdgeOptions={{
-            style: { stroke: theme.edgeDefault, strokeWidth: 1.5 },
-          }}
+          defaultEdgeOptions={defaultEdgeOptions}
         >
           <FitViewOnData nodeCount={nodes.length} />
           <Background
@@ -246,7 +249,7 @@ export const App = () => {
               borderRadius: 6,
             }}
           />
-          <style>{`
+          <style key={theme.mode}>{`
             .react-flow__controls-button {
               background: ${theme.bgSurface} !important;
               border: none !important;

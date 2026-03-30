@@ -38,7 +38,7 @@ export const createHoustonPanel = (
   const themeDisposable = vscode.window.onDidChangeActiveColorTheme((theme) => {
     panel.webview.postMessage({ type: 'themeChanged', kind: theme.kind });
   });
-  context.subscriptions.push(themeDisposable);
+  panel.onDidDispose(() => themeDisposable.dispose());
 
   return panel;
 };
