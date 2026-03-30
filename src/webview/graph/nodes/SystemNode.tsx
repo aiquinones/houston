@@ -1,10 +1,11 @@
 import React from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { HoustonNodeData } from '../../../shared/types.js';
-import { colors } from '../../theme/colors.js';
+import { useTheme } from '../../theme/ThemeContext.js';
 
 // marker:start SystemNode
 export const SystemNode = ({ data }: NodeProps) => {
+  const theme = useTheme();
   const nodeData = data as unknown as HoustonNodeData;
 
   return (
@@ -12,8 +13,8 @@ export const SystemNode = ({ data }: NodeProps) => {
       style={{
         width: '100%',
         height: '100%',
-        background: colors.bgSystem,
-        border: `1px solid ${colors.borderSystem}`,
+        background: theme.bgSystem,
+        border: `1px solid ${theme.borderSystem}`,
         borderRadius: 8,
         padding: 0,
         position: 'relative',
@@ -22,7 +23,7 @@ export const SystemNode = ({ data }: NodeProps) => {
       <div
         style={{
           padding: '12px 16px',
-          borderBottom: `1px solid ${colors.borderSystem}`,
+          borderBottom: `1px solid ${theme.borderSystem}`,
           display: 'flex',
           alignItems: 'center',
           gap: 8,
@@ -33,13 +34,13 @@ export const SystemNode = ({ data }: NodeProps) => {
             width: 8,
             height: 8,
             borderRadius: '50%',
-            background: colors.accent,
-            boxShadow: `0 0 6px ${colors.accentGlow}`,
+            background: theme.accent,
+            boxShadow: `0 0 6px ${theme.accentGlow}`,
           }}
         />
         <span
           style={{
-            color: colors.textPrimary,
+            color: theme.textPrimary,
             fontWeight: 600,
             fontSize: 13,
             fontFamily: 'monospace',
@@ -55,7 +56,7 @@ export const SystemNode = ({ data }: NodeProps) => {
           style={{
             padding: '6px 16px',
             fontSize: 11,
-            color: colors.textMuted,
+            color: theme.textMuted,
             fontFamily: 'monospace',
           }}
         >

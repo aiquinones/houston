@@ -1,10 +1,11 @@
 import React from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { HoustonNodeData } from '../../../shared/types.js';
-import { colors } from '../../theme/colors.js';
+import { useTheme } from '../../theme/ThemeContext.js';
 
 // marker:start FlowNode
 export const FlowNode = ({ data }: NodeProps) => {
+  const theme = useTheme();
   const nodeData = data as unknown as HoustonNodeData;
 
   return (
@@ -12,7 +13,7 @@ export const FlowNode = ({ data }: NodeProps) => {
       style={{
         padding: '6px 12px',
         background: 'transparent',
-        borderLeft: `2px solid ${colors.accent}`,
+        borderLeft: `2px solid ${theme.accent}`,
         display: 'flex',
         alignItems: 'center',
         gap: 6,
@@ -20,7 +21,7 @@ export const FlowNode = ({ data }: NodeProps) => {
     >
       <span
         style={{
-          color: colors.textAccent,
+          color: theme.textAccent,
           fontSize: 12,
           fontFamily: 'monospace',
           fontWeight: 500,
