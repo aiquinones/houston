@@ -5,9 +5,9 @@ import { DetailPanel } from './DetailPanel.js';
 import { darkColors as colors } from '../theme/colors.js';
 import type { StepSummary } from '../../shared/types.js';
 
-const Wrapper = ({ children: _, items, ...props }: React.ComponentProps<typeof DetailPanel> & { items: StepSummary[] }) => (
+const Wrapper = ({ children, ...props }: React.ComponentProps<typeof DetailPanel>) => (
   <div style={{ position: 'relative', width: '100vw', height: '100vh', background: colors.bg }}>
-    <DetailPanel {...props} children={items} />
+    <DetailPanel {...props} children={children} />
   </div>
 );
 
@@ -30,7 +30,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     label: 'Database Migrations',
-    items: [
+    children: [
       { label: 'Create users table', fileRef: { path: 'migrations/001_users.sql' } },
       { label: 'Add indexes', fileRef: { path: 'migrations/002_indexes.sql' } },
       { label: 'Create sessions table', fileRef: { path: 'migrations/003_sessions.sql' } },
@@ -43,7 +43,7 @@ export const Default: Story = {
 export const WithFunctionRefs: Story = {
   args: {
     label: 'Auth Flow',
-    items: [
+    children: [
       { label: 'Validate credentials', fileRef: { path: 'src/auth/login.ts', functionName: 'validateCredentials' } },
       { label: 'Generate JWT', description: 'Signs access + refresh tokens', fileRef: { path: 'src/auth/jwt.ts', functionName: 'signTokenPair' } },
       { label: 'Set cookies', fileRef: { path: 'src/auth/cookies.ts', line: 15 } },
@@ -54,7 +54,7 @@ export const WithFunctionRefs: Story = {
 export const SingleItem: Story = {
   args: {
     label: 'Cleanup',
-    items: [
+    children: [
       { label: 'Remove temp files', description: 'Clears /tmp after build', fileRef: { path: 'scripts/cleanup.sh' } },
     ],
   },
@@ -63,7 +63,7 @@ export const SingleItem: Story = {
 export const ManyItems: Story = {
   args: {
     label: 'Test Suite Results',
-    items: Array.from({ length: 15 }, (_, i) => ({
+    children: Array.from({ length: 15 }, (_, i) => ({
       label: `Test case ${i + 1}`,
       description: i % 3 === 0 ? `Integration test for module ${i}` : undefined,
       fileRef: i % 2 === 0 ? { path: `tests/test_${i + 1}.ts`, line: (i + 1) * 10 } : undefined,
@@ -74,7 +74,7 @@ export const ManyItems: Story = {
 export const NoFileRefs: Story = {
   args: {
     label: 'Planning Steps',
-    items: [
+    children: [
       { label: 'Review requirements' },
       { label: 'Design schema' },
       { label: 'Write migration' },

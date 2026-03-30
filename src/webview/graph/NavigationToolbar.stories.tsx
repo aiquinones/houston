@@ -46,6 +46,10 @@ export const ZoomMode: Story = {
 };
 
 export const Interactive: Story = {
+  args: {
+    mode: 'select',
+    onModeChange: fn(),
+  },
   render: () => {
     const [mode, setMode] = useState<NavigationMode>('select');
     return (

@@ -39,7 +39,7 @@ export const lightColors: ColorTheme = {
   borderSystem: '#c7d0de',
   textPrimary: '#1e293b',
   textSecondary: '#475569',
-  textMuted: '#94a3b8',
+  textMuted: '#64748b',
   textAccent: '#2563eb',
   accent: '#3b82f6',
   accentGlow: 'rgba(59, 130, 246, 0.12)',
