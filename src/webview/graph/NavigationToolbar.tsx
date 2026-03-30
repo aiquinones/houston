@@ -1,6 +1,6 @@
 import React from 'react';
 import type { NavigationMode } from '../hooks/useNavigationMode.js';
-import { colors } from '../theme/colors.js';
+import { useTheme } from '../theme/ThemeContext.js';
 
 type Props = {
   mode: NavigationMode;
@@ -15,6 +15,7 @@ const modes: Array<{ key: NavigationMode; label: string; shortcut: string; icon:
 
 // marker:start NavigationToolbar
 export const NavigationToolbar = ({ mode, onModeChange }: Props) => {
+  const theme = useTheme();
   return (
     <div
       style={{
@@ -25,8 +26,8 @@ export const NavigationToolbar = ({ mode, onModeChange }: Props) => {
         zIndex: 10,
         display: 'flex',
         gap: 1,
-        background: colors.bgSurface,
-        border: `1px solid ${colors.border}`,
+        background: theme.bgSurface,
+        border: `1px solid ${theme.border}`,
         borderRadius: 8,
         padding: 3,
         fontFamily: 'monospace',
@@ -49,8 +50,8 @@ export const NavigationToolbar = ({ mode, onModeChange }: Props) => {
               cursor: 'pointer',
               fontSize: 12,
               fontFamily: 'monospace',
-              background: isActive ? colors.bgHover : 'transparent',
-              color: isActive ? colors.textPrimary : colors.textMuted,
+              background: isActive ? theme.bgHover : 'transparent',
+              color: isActive ? theme.textPrimary : theme.textMuted,
               transition: 'all 0.12s',
             }}
           >
@@ -61,7 +62,7 @@ export const NavigationToolbar = ({ mode, onModeChange }: Props) => {
                 opacity: 0.6,
                 padding: '1px 4px',
                 borderRadius: 3,
-                background: isActive ? colors.border : 'transparent',
+                background: isActive ? theme.border : 'transparent',
               }}
             >
               {m.shortcut}

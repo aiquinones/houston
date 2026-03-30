@@ -35,6 +35,11 @@ export const createHoustonPanel = (
     context.subscriptions
   );
 
+  const themeDisposable = vscode.window.onDidChangeActiveColorTheme((theme) => {
+    panel.webview.postMessage({ type: 'themeChanged', kind: theme.kind });
+  });
+  panel.onDidDispose(() => themeDisposable.dispose());
+
   return panel;
 };
 
@@ -84,6 +89,11 @@ const getWebviewHtml = (
 
   const nonce = getNonce();
 
+  const themeKind = vscode.window.activeColorTheme.kind;
+  const isDark = themeKind !== 1 && themeKind !== 4; // 1=Light, 4=HighContrastLight
+  const initialBg = isDark ? '#0a0e17' : '#f8f9fb';
+  const initialColor = isDark ? '#c8d3e0' : '#1e293b';
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,13 +110,13 @@ const getWebviewHtml = (
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #0a0e17;
-      color: #c8d3e0;
+      background: ${initialBg};
+      color: ${initialColor};
       font-family: var(--vscode-font-family, 'SF Mono', 'Fira Code', monospace);
     }
   </style>
 </head>
-<body>
+<body data-vscode-theme="${themeKind}">
   <div id="root"></div>
   <script nonce="${nonce}" src="${scriptUri}"></script>
 </body>

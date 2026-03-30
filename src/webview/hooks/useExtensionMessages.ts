@@ -41,6 +41,8 @@ export const useExtensionMessages = () => {
         case 'error':
           setError(msg.message);
           break;
+        case 'themeChanged':
+          break;
       }
     };
 
