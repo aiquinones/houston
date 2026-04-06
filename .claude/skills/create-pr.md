@@ -28,7 +28,7 @@ Create a pull request for the current branch. Follow these steps:
 
    **Only** use these three categories. If you are 85%+ confident the PR doesn't fit any of them, ask the user via `AskUserQuestion` to suggest a new category before proceeding. Do not invent categories on your own. If you found a new category, you MUST report it.
 
-3. Push the branch if needed (`git push -u origin HEAD`), then create the PR:
+3. Always create a new branch from the current branch before committing. Use a descriptive branch name (e.g., `feat/short-description`, `fix/short-description`, `cleanup/short-description`). Push the branch (`git push -u origin HEAD`), then create the PR:
 
 ```
 gh pr create --title "the pr title" --body "$(cat <<'EOF'
