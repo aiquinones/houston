@@ -1,0 +1,23 @@
+{
+  "name": "houston-plugins",
+  "owner": {
+    "name": "Houston",
+    "email": "aiquinones@github.com"
+  },
+  "metadata": {
+    "description": "Claude Code plugins for Houston — generate, validate, and maintain architecture.md files",
+    "version": "0.1.0",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "houston-architect",
+      "source": "./plugins/houston-architect",
+      "description": "Generate, validate, and update architecture.md files for Houston visualization",
+      "version": "0.1.0",
+      "author": { "name": "Houston" },
+      "keywords": ["architecture", "visualization", "documentation"],
+      "category": "documentation"
+    }
+  ]
+}
