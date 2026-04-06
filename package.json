@@ -7,7 +7,7 @@
   "publisher": "houston",
   "repository": {
     "type": "git",
-    "url": "https://github.com/canokay/houston"
+    "url": "https://github.com/aiquinones/houston"
   },
   "engines": {
     "vscode": "^1.85.0"
@@ -30,6 +30,14 @@
       {
         "command": "houston.refresh",
         "title": "Houston: Refresh"
+      },
+      {
+        "command": "houston.enablePlugins",
+        "title": "Houston: Enable Claude Code Plugins"
+      },
+      {
+        "command": "houston.disablePlugins",
+        "title": "Houston: Disable Claude Code Plugins"
       }
     ],
     "keybindings": [

@@ -1,0 +1,11 @@
+{
+  "name": "houston-architect",
+  "description": "Generate, validate, and update architecture.md files for Houston visualization",
+  "version": "0.1.0",
+  "author": {
+    "name": "Houston"
+  },
+  "repository": "https://github.com/aiquinones/houston",
+  "license": "MIT",
+  "keywords": ["architecture", "visualization", "documentation", "houston"]
+}

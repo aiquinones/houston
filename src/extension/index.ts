@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { createHoustonPanel, postMessage } from './panel.js';
+import { enablePlugins, disablePlugins } from './plugins.js';
 import { createWatcher, findArchitectureFile, readAndParse } from './watcher.js';
 
 let panel: vscode.WebviewPanel | undefined;
@@ -38,7 +39,10 @@ export const activate = (context: vscode.ExtensionContext): void => {
     sendGraphData();
   });
 
-  context.subscriptions.push(openCommand, refreshCommand);
+  const enablePluginsCmd = vscode.commands.registerCommand('houston.enablePlugins', enablePlugins);
+  const disablePluginsCmd = vscode.commands.registerCommand('houston.disablePlugins', disablePlugins);
+
+  context.subscriptions.push(openCommand, refreshCommand, enablePluginsCmd, disablePluginsCmd);
 };
 // marker:end Activate
 
