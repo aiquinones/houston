@@ -53,7 +53,9 @@
     "build": "node scripts/build.mjs",
     "lint": "eslint src/",
     "typecheck": "tsc --noEmit",
-    "package": "pnpm build && npx @vscode/vsce package --no-dependencies"
+    "package": "pnpm build && npx @vscode/vsce package --no-dependencies",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "remark-frontmatter": "^5.0.0",
@@ -71,6 +73,10 @@
     "esbuild": "^0.21.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "storybook": "^10.3.3",
+    "@storybook/react-vite": "^10.3.3",
+    "@storybook/addon-a11y": "^10.3.3",
+    "@storybook/addon-docs": "^10.3.3"
   }
 }
